@@ -5,6 +5,8 @@ from flask import Flask, request, jsonify
 import sentense_embedding
 import thought_classification
 import time
+import datetime
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -29,12 +31,19 @@ def classify_sentense():
         embedded_sentences=text_embedding)
     # return f"Repeating the data: {sentense} :P \n {text_embedding}\nSentences Classification:{classification_results}\n"
     # return f"Repeating the data: {sentense} --- Sentences Classification:{classification_results}\n"
+
+    end_time = time.time() - start_time
+
+    with open('logs.log', 'a') as file_handle:
+        ip_addr = request.remote_addr
+        print(f'Time: {datetime.now()} - IP: {ip_addr}', file=file_handle)
+
     return {
         'data_payload': {
             'original_sentence': sentense,
             'quantized_model': quantized_model,
             'thought_classification': classification_results,
-            'processing_time_seconds': time.time() - start_time
+            'processing_time_seconds': end_time
         }
     }
 
