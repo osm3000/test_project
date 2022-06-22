@@ -35,7 +35,8 @@ def classify_sentense():
 
     ip_addr = request.remote_addr
     with open('logs.log', 'a') as file_handle:
-        print(f'Time: {datetime.now()} - IP: {ip_addr}', file=file_handle)
+        print(f'Time: {datetime.datetime.now()} - IP: {ip_addr}',
+              file=file_handle)
 
     return {
         'data_payload': {
