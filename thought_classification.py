@@ -6,8 +6,10 @@ qconfig = torch.quantization.get_default_qat_qconfig('qnnpack')
 # set the qengine to control weight packing
 torch.backends.quantized.engine = 'qnnpack'
 
-quantized_model = torch.jit.load("./saved_models/int8_model.pt")
-normal_model = torch.jit.load("./saved_models/int8_model.pt")
+normal_model = torch.jit.load(
+    "./saved_models/normal_full_data_model.pt")
+quantized_model = torch.jit.load(
+    "./saved_models/dynamic_quant_full_data_model.pt")
 
 
 def load_model(quantized_model:bool=True):
