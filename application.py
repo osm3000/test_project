@@ -33,9 +33,8 @@ def classify_sentense():
 
     end_time = time.time() - start_time
 
-    ip_addr = request.remote_addr
     with open('logs.log', 'a') as file_handle:
-        print(f'Time: {datetime.datetime.now()} - IP: {ip_addr}',
+        print(f'Time: {datetime.datetime.now()} - Sentence: {sentense} - Result: {classification_results}',
               file=file_handle)
 
     return {
@@ -44,7 +43,6 @@ def classify_sentense():
             'quantized_model': quantized_model,
             'thought_classification': classification_results,
             'processing_time_seconds': end_time,
-            'your_ip': ip_addr
         }
     }
 
