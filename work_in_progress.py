@@ -35,7 +35,10 @@ training_configs = {
     'average_epochs': 0,
     'backend': "qnnpack",
     # 'learning_rate': 0.00001
-    'learning_rate': 0.001
+    'learning_rate': 0.001,
+    'name_suffix': "L",
+    # 'hidden_layer_size': 30, # original number
+    'hidden_layer_size': 100,
 }
 
 # # set the qconfig for PTQ
@@ -65,10 +68,11 @@ X = data_training.values
 
 class thought_model(nn.Sequential):
     def __init__(self):
-        super().__init__(nn.Linear(768, 30),
+        global training_configs
+        super().__init__(nn.Linear(768, training_configs['hidden_layer_size']),
         nn.Dropout(0.3),
         nn.GELU(),
-        nn.Linear(30, 2),
+        nn.Linear(training_configs['hidden_layer_size'], 2),
         nn.GELU())
         
         for m in self.modules():
@@ -241,13 +245,16 @@ def train_final_model():
 
 
     model_scripted = torch.jit.script(model)  # Export to TorchScript
-    model_scripted.save('./saved_models/normal_full_data_model.pt') # Save
+    model_scripted.save(
+        f'./saved_models/normal_full_data_model_{training_configs["name_suffix"]}.pt')  # Save
 
     model_scripted = torch.jit.script(model_dynamic_int8)  # Export to TorchScript
-    model_scripted.save('./saved_models/dynamic_quant_full_data_model.pt')  # Save
+    model_scripted.save(
+        f'./saved_models/dynamic_quant_full_data_model_{training_configs["name_suffix"]}.pt')  # Save
     
     model_scripted = torch.jit.script(model_static_quantized)  # Export to TorchScript
-    model_scripted.save('./saved_models/static_quant_full_data_model.pt')  # Save
+    model_scripted.save(
+        f'./saved_models/static_quant_full_data_model_{training_configs["name_suffix"]}.pt')  # Save
 
     print(f"Model is trained. Mission Accomplished.")
     # pred = torch.argmax(torch.softmax(net_system(torch.tensor(X_test).float()), 1), 1).detach().numpy()
