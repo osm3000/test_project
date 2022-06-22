@@ -1,8 +1,10 @@
 from distutils.log import debug
 import json
+from time import time
 from flask import Flask, request, jsonify
 import sentense_embedding
 import thought_classification
+import time
 
 app = Flask(__name__)
 
@@ -14,6 +16,7 @@ def hello_world():
 
 @app.route('/get_classification', methods=['GET'])
 def classify_sentense():
+    start_time = time.time()
     sentense = request.args.get('data')
     quantized_model = request.args.get('quantized_model')
 
@@ -30,7 +33,8 @@ def classify_sentense():
         'data_payload': {
             'original_sentence': sentense,
             'quantized_model': quantized_model,
-            'thought_classification': classification_results    
+            'thought_classification': classification_results,
+            'processing_time_seconds': time.time() - start_time
         }
     }
 
