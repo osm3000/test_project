@@ -29,10 +29,13 @@ from sklearn.exceptions import DataConversionWarning, UndefinedMetricWarning
 warnings.filterwarnings(action='ignore', category=UndefinedMetricWarning)
 
 training_configs = {
-    'max_epochs': 5,
-    'batch_size': 16,
+    'max_epochs': 1000,
+    # 'batch_size': 16,
+    'batch_size': 512,
     'average_epochs': 0,
-    'backend': "qnnpack"
+    'backend': "qnnpack",
+    # 'learning_rate': 0.00001
+    'learning_rate': 0.001
 }
 
 # # set the qconfig for PTQ
@@ -117,7 +120,8 @@ class net_trainer(pl.LightningModule):
         # print('LOSS :', loss.item() ,'F1 score : ',f1_score_val , '|ACC :',acc_val, '|RECALL : ',recall_val, '|PRECISION : ',precision_val)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=0.00001)
+        global training_configs
+        optimizer = torch.optim.Adam(self.parameters(), lr=training_configs['learning_rate'])
         return optimizer
     
     def get_history(self):
