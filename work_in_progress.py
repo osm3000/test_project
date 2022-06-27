@@ -37,8 +37,8 @@ training_configs = {
     # 'learning_rate': 0.00001
     'learning_rate': 0.001,
     'name_suffix': "L",
-    # 'hidden_layer_size': 30, # original number
-    'hidden_layer_size': 100,
+    'hidden_layer_size': 30, # original number
+    # 'hidden_layer_size': 100,
 }
 
 # # set the qconfig for PTQ
@@ -48,8 +48,13 @@ training_configs = {
 # # set the qengine to control weight packing
 # torch.backends.quantized.engine = training_configs['backend']
 
-data=pd.read_csv('./data/thought_examples.csv')
-
+# data = pd.read_csv('./data/thought_examples.csv', header=0, sep='::')
+data = pd.read_csv('./data/thought_examples.csv')
+# data.dropna(axis=0, inplace=True)
+# print(data.columns)
+# data['text input'] = data['text input'].apply(lambda x: x.lower())
+# print(data.shape)
+# exit()
 create_new_embeddings = False
 
 data_training = None
